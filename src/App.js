@@ -21,13 +21,27 @@ function App() {
 		{ id: 3, title: 'Python 3', body: 'Description 3' },
 		{ id: 4, title: 'Python 4', body: 'Description 4' },
 	])
+
+	const [title, setTitle] = useState('')
+
+	const addNewPost = () => {
+		setPosts([...posts, { id: posts.length + 1, title, body: 'Новый пост' }])
+	}
+
+	console.log('posts', posts)
+
 	return (
 		<div className="App">
-			<form>
-				<MyInput type={'text'} placeholder={'Название поста  JS'} />
+			<form onSubmit={event => event.preventDefault()}>
+				<MyInput
+					value={title}
+					onChange={e => setTitle(e.target.value)}
+					type={'text'}
+					placeholder={'Название поста  JS'}
+				/>
 				<MyInput type={'text'} placeholder={'Название поста  Python'} />
 
-				<MyButton disabled={true}>Создать пост</MyButton>
+				<MyButton onClick={addNewPost}>Создать пост</MyButton>
 			</form>
 
 			<PostList posts={posts} title={'Посты про  JS'} />
