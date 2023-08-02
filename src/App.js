@@ -25,15 +25,33 @@ function App() {
 	])
 
 	const addPostHandler = (newPostJS, newPostPython) => {
-		setPosts([...posts, newPostJS])
-		setPosts2([...posts2, newPostPython])
+		if (newPostJS.title) {
+			setPosts([...posts, newPostJS])
+		}
+
+		if (newPostPython.title) {
+			setPosts2([...posts2, newPostPython])
+		}
+	}
+
+	const deletePostHandler = (postId, isPython) => {
+		if (!isPython) {
+			setPosts(posts.filter(post => post.id !== postId))
+		} else {
+			setPosts2(posts2.filter(post => post.id !== postId))
+		}
 	}
 
 	return (
 		<div className="App">
 			<PostForm create={addPostHandler} />
-			<PostList posts={posts} title={'Посты про  JS'} />
-			<PostList posts={posts2} title={'Посты про Python'} />
+			<PostList deletePostHandler={deletePostHandler} posts={posts} title={'Посты про  JS'} />
+			<PostList
+				deletePostHandler={deletePostHandler}
+				posts={posts2}
+				title={'Посты про Python'}
+				isPython
+			/>
 		</div>
 	)
 }
