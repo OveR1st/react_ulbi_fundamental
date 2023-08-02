@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Counter from './components/Counter'
 import ClassCounter from './components/ClassCouner'
 import PostItem from './components/PostItem'
@@ -22,24 +22,33 @@ function App() {
 		{ id: 4, title: 'Python 4', body: 'Description 4' },
 	])
 
-	const [title, setTitle] = useState('')
+	const [post, setPost] = useState({ title: '', body: '' })
 
 	const addNewPost = () => {
-		setPosts([...posts, { id: posts.length + 1, title, body: 'Новый пост' }])
-	}
+		const newPostJS = { id: posts.length + 1, title: post.title, body: 'Новый пост JS' }
+		const newPostPython = { id: posts2.length + 1, title: post.body, body: 'Новый пост Python' }
 
-	console.log('posts', posts)
+		setPosts([...posts, newPostJS])
+		setPosts2([...posts, newPostPython])
+	}
 
 	return (
 		<div className="App">
 			<form onSubmit={event => event.preventDefault()}>
+				{/*controll*/}
 				<MyInput
-					value={title}
-					onChange={e => setTitle(e.target.value)}
+					value={post.title}
+					onChange={e => setPost({ ...post, title: e.target.value })}
 					type={'text'}
 					placeholder={'Название поста  JS'}
 				/>
-				<MyInput type={'text'} placeholder={'Название поста  Python'} />
+				{/* NOT controll*/}
+				<MyInput
+					value={post.body}
+					onChange={e => setPost({ ...post, body: e.target.value })}
+					type={'text'}
+					placeholder={'Название поста  Python'}
+				/>
 
 				<MyButton onClick={addNewPost}>Создать пост</MyButton>
 			</form>
