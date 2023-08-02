@@ -7,10 +7,9 @@ const PostForm = ({ create }) => {
 	const [post, setPost] = useState({ title: '', body: '' })
 
 	const addNewPost = () => {
-		const newPostJS = { id: new Date(), title: post.title, body: 'Новый пост JS' }
-		const newPostPython = { id: new Date(), title: post.body, body: 'Новый пост Python' }
+		const newPost = { id: new Date(), title: post.title, body: post.body }
 
-		create(newPostJS, newPostPython)
+		create(newPost)
 
 		setPost({ title: '', body: '' })
 	}
@@ -22,14 +21,14 @@ const PostForm = ({ create }) => {
 				value={post.title}
 				onChange={e => setPost({ ...post, title: e.target.value })}
 				type={'text'}
-				placeholder={'Название поста  JS'}
+				placeholder={'Название поста'}
 			/>
 			{/* NOT controll*/}
 			<MyInput
 				value={post.body}
 				onChange={e => setPost({ ...post, body: e.target.value })}
 				type={'text'}
-				placeholder={'Название поста  Python'}
+				placeholder={'Описание поста'}
 			/>
 
 			<MyButton onClick={addNewPost}>Создать пост</MyButton>

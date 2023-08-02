@@ -12,7 +12,6 @@ const PostList = ({ posts, title, deletePostHandler, isPython }) => {
 					number={index}
 					key={post.id}
 					post={post}
-					isPython={isPython}
 				/>
 			))}
 		</div>
