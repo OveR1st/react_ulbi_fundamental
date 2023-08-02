@@ -45,17 +45,11 @@ function App() {
 
 			<PostFilter filter={filter} setFilter={setFilter} />
 
-			{sortedAndSearchPosts.length !== 0 ? (
-				<PostList
-					deletePostHandler={deletePostHandler}
-					posts={sortedAndSearchPosts}
-					title={'Посты про JS'}
-				/>
-			) : (
-				<div style={{ textAlign: 'center', fontSize: '32px', fontWeight: 'bold' }}>
-					Посты не найдены!
-				</div>
-			)}
+			<PostList
+				deletePostHandler={deletePostHandler}
+				posts={sortedAndSearchPosts}
+				title={'Посты про JS'}
+			/>
 		</div>
 	)
 }
