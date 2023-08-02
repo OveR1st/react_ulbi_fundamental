@@ -18,20 +18,23 @@ function App() {
 		{ id: 3, title: 'вввв', body: 'аааа' },
 		{ id: 4, title: 'гггг', body: 'мммм' },
 	])
+
 	const [selectedSort, setSelectedSort] = useState('')
 	const [searchQuery, setSearchQuery] = useState('')
 
-	function getSortedPosts() {
-		console.log('CALL getSortedPosts')
+	const sortedPosts = useMemo(() => {
 		if (selectedSort) {
 			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
 		}
 
 		return posts
-	}
+	}, [selectedSort, posts])
 
-	// const sortedPosts = getSortedPosts()
-	const sortedPosts = useMemo(getSortedPosts, [selectedSort, posts])
+	const sortedAndSearchPosts = useMemo(() => {
+		return sortedPosts.filter(post =>
+			post.title.toLowerCase().includes(searchQuery.toLowerCase())
+		)
+	}, [searchQuery, sortedPosts])
 
 	const addPostHandler = newPost => {
 		setPosts([...posts, newPost])
@@ -66,10 +69,10 @@ function App() {
 				/>
 			</div>
 
-			{posts.length !== 0 ? (
+			{sortedAndSearchPosts.length !== 0 ? (
 				<PostList
 					deletePostHandler={deletePostHandler}
-					posts={sortedPosts}
+					posts={sortedAndSearchPosts}
 					title={'Посты про JS'}
 				/>
 			) : (
