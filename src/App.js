@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Counter from './components/Counter'
 import ClassCounter from './components/ClassCouner'
 import PostItem from './components/PostItem'
@@ -18,6 +18,20 @@ function App() {
 		{ id: 3, title: 'вввв', body: 'аааа' },
 		{ id: 4, title: 'гггг', body: 'мммм' },
 	])
+	const [selectedSort, setSelectedSort] = useState('')
+	const [searchQuery, setSearchQuery] = useState('')
+
+	function getSortedPosts() {
+		console.log('CALL getSortedPosts')
+		if (selectedSort) {
+			return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))
+		}
+
+		return posts
+	}
+
+	// const sortedPosts = getSortedPosts()
+	const sortedPosts = useMemo(getSortedPosts, [selectedSort, posts])
 
 	const addPostHandler = newPost => {
 		setPosts([...posts, newPost])
@@ -27,11 +41,8 @@ function App() {
 		setPosts(posts.filter(post => post.id !== postId))
 	}
 
-	const [selecteSort, setSelectedSort] = useState('')
 	const selecteSortHandler = sort => {
 		setSelectedSort(sort)
-		console.log('selected sort', sort)
-		setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])))
 	}
 
 	return (
@@ -39,8 +50,13 @@ function App() {
 			<PostForm create={addPostHandler} />
 			<hr style={{ margin: '15px' }}></hr>
 			<div>
+				<MyInput
+					value={searchQuery}
+					onChange={e => setSearchQuery(e.target.value)}
+					placeholder={'search....'}
+				/>
 				<MySelect
-					value={selecteSort}
+					value={selectedSort}
 					onChange={selecteSortHandler}
 					options={[
 						{ value: 'title', name: 'По названию' },
@@ -53,7 +69,7 @@ function App() {
 			{posts.length !== 0 ? (
 				<PostList
 					deletePostHandler={deletePostHandler}
-					posts={posts}
+					posts={sortedPosts}
 					title={'Посты про JS'}
 				/>
 			) : (
