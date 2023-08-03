@@ -1,19 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import PostService from './API/PostService'
 
 import PostList from './components/PostList'
 import PostForm from './components/PostForm'
 import PostFilter from './components/PostFilter'
 
-import './styles/App.css'
 import MyModal from './components/UI/MyModal/MyModal'
 import MyButton from './components/UI/button/MyButton'
-import { usePosts, useSortedPosts } from './hooks/usePosts'
-import axios from 'axios'
-import PostService from './API/PostService'
 import Loader from './components/UI/Loader/Loader'
+
+import './styles/App.css'
+
+import { usePosts } from './hooks/usePosts'
 import { useFetching } from './hooks/useFetching'
-import { getPageCount } from './utils/pages'
 import { usePagination } from './hooks/usePagination'
+
+import { getPageCount } from './utils/pages'
+import Pagination from './components/UI/pagination/Pagination'
 
 function App() {
 	const [posts, setPosts] = useState([])
@@ -52,23 +55,27 @@ function App() {
 	useEffect(() => {
 		fetchPosts()
 	}, [page])
-	console.log('page', page)
-	console.log('pagesArray', pagesArray)
+
 	return (
 		<div className="App">
 			<MyButton style={{ marginTop: '30px' }} onClick={fetchPosts}>
 				GET POSTS
 			</MyButton>
+
 			<MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
 				Создать пользователя
 			</MyButton>
+
 			<MyModal visible={modal} setModal={setModal}>
 				<PostForm create={addPostHandler} />
 			</MyModal>
+
 			<hr style={{ margin: '15px' }}></hr>
 
 			<PostFilter filter={filter} setFilter={setFilter} />
+
 			{postError && <h1>ERROR</h1>}
+
 			{isPostsLoading ? (
 				<div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
 					<Loader />
@@ -81,19 +88,7 @@ function App() {
 				/>
 			)}
 
-			<div className={'page__wrapper'}>
-				{pagesArray.map(p => {
-					return (
-						<MyButton
-							className={page === p ? 'page page__current' : 'page'}
-							key={p}
-							onClick={() => setPage(p)}
-						>
-							{p}
-						</MyButton>
-					)
-				})}
-			</div>
+			<Pagination pagesArray={pagesArray} page={page} setPage={setPage} />
 		</div>
 	)
 }
