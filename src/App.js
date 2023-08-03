@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import PostList from './components/PostList'
 import PostForm from './components/PostForm'
@@ -8,14 +8,10 @@ import './styles/App.css'
 import MyModal from './components/UI/MyModal/MyModal'
 import MyButton from './components/UI/button/MyButton'
 import { usePosts, useSortedPosts } from './hooks/usePosts'
+import axios from 'axios'
 
 function App() {
-	const [posts, setPosts] = useState([
-		{ id: 1, title: 'aaaa', body: 'ццц' },
-		{ id: 2, title: 'бббб', body: 'уууу' },
-		{ id: 3, title: 'вввв', body: 'аааа' },
-		{ id: 4, title: 'гггг', body: 'мммм' },
-	])
+	const [posts, setPosts] = useState([])
 
 	const [filter, setFilter] = useState({ sort: '', query: '' })
 	const [modal, setModal] = useState(false)
@@ -31,8 +27,21 @@ function App() {
 		setPosts(posts.filter(post => post.id !== postId))
 	}
 
+	async function fetchPosts() {
+		const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+
+		setPosts(response.data)
+	}
+
+	useEffect(() => {
+		fetchPosts()
+	}, [])
+
 	return (
 		<div className="App">
+			<MyButton style={{ marginTop: '30px' }} onClick={fetchPosts}>
+				GET POSTS
+			</MyButton>
 			<MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
 				Создать пользователя
 			</MyButton>
