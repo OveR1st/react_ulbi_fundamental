@@ -16,6 +16,7 @@ function App() {
 
 	const [filter, setFilter] = useState({ sort: '', query: '' })
 	const [modal, setModal] = useState(false)
+	const [isPostsLoading, setIsPostsLoading] = useState(false)
 
 	const sortedAndSearchPosts = usePosts(posts, filter.sort, filter.query)
 
@@ -29,15 +30,21 @@ function App() {
 	}
 
 	async function fetchPosts() {
-		const posts = await PostService.getAll()
+		setIsPostsLoading(true)
 
-		setPosts(posts)
+		setTimeout(async () => {
+			const posts = await PostService.getAll()
+
+			setPosts(posts)
+			setIsPostsLoading(false)
+		}, 1000)
 	}
 
 	useEffect(() => {
 		fetchPosts()
 	}, [])
 
+	console.log('isPostsLoading', isPostsLoading)
 	return (
 		<div className="App">
 			<MyButton style={{ marginTop: '30px' }} onClick={fetchPosts}>
@@ -53,11 +60,15 @@ function App() {
 
 			<PostFilter filter={filter} setFilter={setFilter} />
 
-			<PostList
-				deletePostHandler={deletePostHandler}
-				posts={sortedAndSearchPosts}
-				title={'Посты про JS'}
-			/>
+			{isPostsLoading ? (
+				<h1>Загрузка </h1>
+			) : (
+				<PostList
+					deletePostHandler={deletePostHandler}
+					posts={sortedAndSearchPosts}
+					title={'Посты про JS'}
+				/>
+			)}
 		</div>
 	)
 }
