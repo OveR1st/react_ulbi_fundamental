@@ -2,11 +2,12 @@ import React from 'react'
 import MyButton from './UI/button/MyButton'
 
 const PostItem = ({ post, number, deletePostHandler, isPython }) => {
+	console.log('post', post)
 	return (
 		<div className="post">
 			<div className="post__content">
 				<strong>
-					{number}. {post.title}
+					{post.id}. {post.title}
 				</strong>
 				<div>{post.body}</div>
 			</div>

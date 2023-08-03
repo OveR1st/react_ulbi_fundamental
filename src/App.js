@@ -12,21 +12,33 @@ import axios from 'axios'
 import PostService from './API/PostService'
 import Loader from './components/UI/Loader/Loader'
 import { useFetching } from './hooks/useFetching'
+import { getPageCount } from './utils/pages'
+import { usePagination } from './hooks/usePagination'
 
 function App() {
 	const [posts, setPosts] = useState([])
 
 	const [filter, setFilter] = useState({ sort: '', query: '' })
+
 	const [modal, setModal] = useState(false)
-	// const [isPostsLoading, setIsPostsLoading] = useState(false)
+
+	const [totalPages, setTotalPages] = useState(0)
+
+	const [limit, setLimit] = useState(8)
+	const [page, setPage] = useState(1)
 
 	const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-		const posts = await PostService.getAll()
+		const response = await PostService.getAll(limit, page)
+		const totalPages = getPageCount(response.headers['x-total-count'], limit)
 
-		setPosts(posts)
+		setPosts(response.data)
+
+		setTotalPages(totalPages)
 	})
 
 	const sortedAndSearchPosts = usePosts(posts, filter.sort, filter.query)
+
+	const [pagesArray] = usePagination(totalPages)
 
 	const addPostHandler = newPost => {
 		setPosts([...posts, newPost])
@@ -39,9 +51,9 @@ function App() {
 
 	useEffect(() => {
 		fetchPosts()
-	}, [])
-
-	console.log('isPostsLoading', isPostsLoading)
+	}, [page])
+	console.log('page', page)
+	console.log('pagesArray', pagesArray)
 	return (
 		<div className="App">
 			<MyButton style={{ marginTop: '30px' }} onClick={fetchPosts}>
@@ -68,6 +80,20 @@ function App() {
 					title={'Посты про JS'}
 				/>
 			)}
+
+			<div className={'page__wrapper'}>
+				{pagesArray.map(p => {
+					return (
+						<MyButton
+							className={page === p ? 'page page__current' : 'page'}
+							key={p}
+							onClick={() => setPage(p)}
+						>
+							{p}
+						</MyButton>
+					)
+				})}
+			</div>
 		</div>
 	)
 }
