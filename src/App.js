@@ -4,6 +4,7 @@ import { createBrowserRouter, Link, Outlet, RouterProvider } from 'react-router-
 import Posts from './pages/Posts'
 import About from './pages/About'
 import PostPage from './pages/PostPage'
+import { routsArr } from './router'
 
 export const Navbar = () => {
 	return (
@@ -18,23 +19,7 @@ export const Navbar = () => {
 	)
 }
 
-const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <Navbar />,
-		children: [
-			{
-				path: 'posts',
-				element: <Posts />,
-			},
-			{
-				path: 'posts/:id',
-				element: <PostPage />,
-			},
-			{ path: '/about', element: <About /> },
-		],
-	},
-])
+const router = createBrowserRouter(routsArr)
 
 function App() {
 	return (
