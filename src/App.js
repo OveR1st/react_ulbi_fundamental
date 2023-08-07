@@ -3,6 +3,7 @@ import React from 'react'
 import { createBrowserRouter, Link, Outlet, RouterProvider } from 'react-router-dom'
 import Posts from './pages/Posts'
 import About from './pages/About'
+import PostPage from './pages/PostPage'
 
 export const Navbar = () => {
 	return (
@@ -19,20 +20,18 @@ export const Navbar = () => {
 
 const router = createBrowserRouter([
 	{
+		path: '/',
 		element: <Navbar />,
 		children: [
 			{
-				path: '/',
-				element: <div>MAIN PAGE</div>,
-			},
-			{
-				path: '/posts',
+				path: 'posts',
 				element: <Posts />,
 			},
 			{
-				path: '/about',
-				element: <About />,
+				path: 'posts/:id',
+				element: <PostPage />,
 			},
+			{ path: '/about', element: <About /> },
 		],
 	},
 ])

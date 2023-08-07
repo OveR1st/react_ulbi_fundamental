@@ -18,7 +18,7 @@
 	height: 40px;
 	background: gainsboro;
 	display: flex;
-	justify-content: end;
+	justify-content: flex-end;
 	align-items: center;
 	padding: 0 20px;
 	gap: 22px;
@@ -33,6 +33,11 @@
 
 	padding: 15px;
 	margin-top: 15px;
+}
+
+.post__btns {
+	display: flex;
+	gap: 10px;
 }
 
 .post-enter {

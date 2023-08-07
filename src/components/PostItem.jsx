@@ -1,8 +1,11 @@
 import React from 'react'
 import MyButton from './UI/button/MyButton'
 
-const PostItem = ({ post, number, deletePostHandler, isPython }) => {
-	console.log('post', post)
+import { useNavigate } from 'react-router-dom'
+
+const PostItem = ({ post, number, deletePostHandler }) => {
+	let navigate = useNavigate()
+
 	return (
 		<div className="post">
 			<div className="post__content">
@@ -13,7 +16,10 @@ const PostItem = ({ post, number, deletePostHandler, isPython }) => {
 			</div>
 
 			<div className="post__btns">
-				<MyButton onClick={() => deletePostHandler(post.id, isPython)}>Удалить</MyButton>
+				<MyButton onClick={() => navigate(`/posts/${post.id}`, { state: { ...post } })}>
+					Открыть
+				</MyButton>
+				<MyButton onClick={() => deletePostHandler(post.id)}>Удалить</MyButton>
 			</div>
 		</div>
 	)
