@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PostService from '../API/PostService'
 
 import PostList from '../components/PostList'
@@ -17,6 +17,8 @@ import { usePagination } from '../hooks/usePagination'
 
 import { getPageCount } from '../utils/pages'
 import Pagination from '../components/UI/pagination/Pagination'
+import { useObserver } from '../hooks/useObserver'
+import MySelect from '../components/UI/select/MySelect'
 
 function Posts() {
 	const [posts, setPosts] = useState([])
@@ -30,11 +32,13 @@ function Posts() {
 	const [limit, setLimit] = useState(8)
 	const [page, setPage] = useState(1)
 
+	const lastItemRef = useRef(null)
+
 	const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
 		const response = await PostService.getAll(limit, page)
 		const totalPages = getPageCount(response.headers['x-total-count'], limit)
 
-		setPosts(response.data)
+		setPosts([...posts, ...response.data])
 
 		setTotalPages(totalPages)
 	})
@@ -54,7 +58,9 @@ function Posts() {
 
 	useEffect(() => {
 		fetchPosts()
-	}, [page])
+	}, [page, limit])
+
+	useObserver(lastItemRef, page < totalPages, isPostsLoading, () => setPage(page + 1))
 
 	return (
 		<>
@@ -74,19 +80,32 @@ function Posts() {
 
 			<PostFilter filter={filter} setFilter={setFilter} />
 
+			<MySelect
+				value={limit}
+				onChange={value => setLimit(value)}
+				defaultValue={'Current elements in page'}
+				options={[
+					{ value: 5, name: '5' },
+					{ value: 10, name: '10' },
+					{ value: 15, name: '15' },
+					{ value: -1, name: 'Show all' },
+				]}
+			/>
+
 			{postError && <h1>ERROR</h1>}
 
-			{isPostsLoading ? (
+			{isPostsLoading && (
 				<div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
 					<Loader />
 				</div>
-			) : (
-				<PostList
-					deletePostHandler={deletePostHandler}
-					posts={sortedAndSearchPosts}
-					title={'Посты про JS'}
-				/>
 			)}
+
+			<PostList
+				deletePostHandler={deletePostHandler}
+				posts={sortedAndSearchPosts}
+				title={'Посты про JS'}
+			/>
+			<div ref={lastItemRef} style={{ height: '20px', backgroundColor: 'red' }}></div>
 
 			<Pagination pagesArray={pagesArray} page={page} setPage={setPage} />
 		</>
