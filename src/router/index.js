@@ -1,12 +1,29 @@
+import { Navigate } from 'react-router-dom'
 import About from '../pages/About'
+import Login from '../pages/Login'
 import PostPage from '../pages/PostPage'
 import Posts from '../pages/Posts'
+import { Navbar } from '../components/UI/Navbar/Navbar'
 
-export const routsArr = [
-	{ path: 'posts', element: <Posts /> },
+export const publicRoutes = [
 	{
-		path: 'posts/:id',
-		element: <PostPage />,
+		path: '/',
+		element: <Navbar />,
+		children: [
+			{
+				path: 'posts',
+				element: <Posts />,
+			},
+			{
+				path: 'posts/:id',
+				element: <PostPage />,
+			},
+			{ path: '/about', element: <About /> },
+			{ path: '*', element: <Navigate to={'/posts'} /> },
+		],
 	},
-	{ path: '/about', element: <About /> },
+]
+export const privateRoutes = [
+	{ path: '/login', element: <Login /> },
+	{ path: '*', element: <Navigate to={'/login'} /> },
 ]

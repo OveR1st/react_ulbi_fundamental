@@ -1,30 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { createBrowserRouter, Link, Outlet, RouterProvider } from 'react-router-dom'
-import Posts from './pages/Posts'
-import About from './pages/About'
-import PostPage from './pages/PostPage'
-import { routsArr } from './router'
 
-export const Navbar = () => {
-	return (
-		<>
-			<div className="navbar_section">
-				<Link to="/">Home</Link>
-				<Link to="/posts">Posts</Link>
-				<Link to="/about">About</Link>
-			</div>
-			<Outlet />
-		</>
-	)
-}
-
-const router = createBrowserRouter(routsArr)
+import { publicRoutes, privateRoutes } from './router'
+import { AuthContext } from './contex'
 
 function App() {
+	const [isAuth, setIsAuth] = useState(false)
+
+	const router = createBrowserRouter(isAuth ? publicRoutes : privateRoutes)
+
 	return (
 		<div className="App">
-			<RouterProvider router={router} />
+			<AuthContext.Provider value={{ isAuth, setIsAuth }}>
+				<RouterProvider router={router} />
+			</AuthContext.Provider>
 		</div>
 	)
 }
