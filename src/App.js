@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { createBrowserRouter, Link, Outlet, RouterProvider } from 'react-router-dom'
 
@@ -9,6 +9,12 @@ function App() {
 	const [isAuth, setIsAuth] = useState(false)
 
 	const router = createBrowserRouter(isAuth ? publicRoutes : privateRoutes)
+
+	useEffect(() => {
+		if (localStorage.getItem('auth') === 'true') {
+			setIsAuth(true)
+		}
+	}, [])
 
 	return (
 		<div className="App">

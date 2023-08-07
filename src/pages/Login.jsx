@@ -11,6 +11,7 @@ const Login = () => {
 	const submit = e => {
 		e.preventDefault()
 		setIsAuth(true)
+		localStorage.setItem('auth', 'true')
 		navigate('/posts')
 	}
 	return (
